@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %} {# étendre le fichier base.html.twig #}
+
+{% block title %} {{parent()}} | Catalogue{% endblock %}
+
+
+{% block titreH1 %}Catalogue{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/catalogue.css') }}">
+{% endblock %}
+
+{% block body %}
+
+
+    {% if produits is not empty %} {# si le tableau produits n'est pas vide #}
+        {# {% if produits %} #}
+
+        <div class="row justify-content-around">
+        {% for produit in produits %} {# on boucle le tableau multidimensionnel PRODUITS, on extrait à chaque tour un tableau PRODUIT (contenant id nom prix etc...) 
+            En TWIG, il n'y a que le terme FOR pour foreach ou bien for ($i = 0; $i < 100; $i++ )#}
+
+            <div class='border border-dark col-md-3 m-2 text-center'>
+
+                <div>{{ produit.id }}</div>
+                {# PRODUIT est un tableau (une ligne de la table produit, Pour préciser un champ du tableau, on utiliser le POINT suivi du nom#}
+                <div>{{ produit.nom }}</div>
+                <div>{{ produit.prix}} €</div>
+                <div>{{ produit.dateAt | date("d/m/Y à H:i:s") }}</div>
+
+                <div>
+                
+                {# les images ne sont pas obligatoires :
+
+                    pour une question d'affichage
+                    soit s'il y a une image en BDD alors on l'affiche
+                    Sinon on affiche une image par défaut
+                
+                 #}
+                {% if produit.image is not empty  %} {# s'il y a une image en bdd #}
+                    <img src="{{ asset('images/imagesUpload/' ~ produit.image) }}" alt="" style='width:100px'>
+                {% else  %}{# si non, value = NULL, on affiche celle par défaut #}
+                    <img src="{{ asset('images/imageDefault.jpg') }}" alt="image par défault" style='width:100px'>
+                {% endif  %}
+                </div>
+
+                <a class="btn btn-danger text-center mt-3 mb-3 col-12" href="{{   path('fiche_produit' , {'id' : produit.id }  )    }}">Voir la fiche</a>
+                
+                
+                
+
+            </div>
+
+        {% endfor %}
+        </div>
+
+    {% else %} {# sinon le tableau produits est vide #}
+
+        <h4 class="text-center mt-4 text-danger">Il n'y aucun produit pour le moment</h4>
+        
+    {% endif %}
+
+ 
+
+
+{% endblock %}
+
+
+
+

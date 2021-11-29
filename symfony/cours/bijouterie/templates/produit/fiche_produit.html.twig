@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %} {# étendre le fichier base.html.twig #}
+
+{% block title %} {{parent()}} | Fiche Produit de : "{{ produit.nom }}" {% endblock %}
+
+{% block titreH1 %}Fiche Produit de : "{{ produit.nom }}" {% endblock %}
+
+
+{% block body %}
+
+    <div class="col-md-10 mx-auto">
+
+        <div class="row justify-content-end">
+            <a class="btn btn-danger text-center mt-3 mb-3 col-2" href="{{ path('catalogue') }}">Catalogue</a>
+        </div>    
+
+
+        <div class='col-md-6 mx-auto m-2 text-center'>
+
+           
+                <div>{{ produit.prix}} €</div>
+                <div>{{ date }}</div>
+
+                <div>
+                    {% if produit.image is not empty  %} {# s'il y a une image en bdd #}
+                        <img src="{{ asset('images/imagesUpload/' ~ produit.image) }}" alt="" style='width:300px'>
+                    {% else  %}{# si non, value = NULL, on affiche celle par défaut #}
+                        <img src="{{ asset('images/imageDefault.jpg') }}" alt="image par défault" style='width:300px'>
+                    {% endif  %}
+                </div>
+
+        </div>
+
+    </div>
+
+ 
+
+
+{% endblock %}
+

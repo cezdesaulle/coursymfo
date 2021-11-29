@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %} {# étendre le fichier base.html.twig #}
+
+{% block title %} {{parent()}} | Modifier un produit{% endblock %}
+
+
+{% block titreH1 %}Modifier un produit{% endblock %}
+
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <div class="col-md-6 mx-auto">
+        {{ form_start(formProduit) }} {# form_start() = balise ouvrante form #}
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    {{ form_row(formProduit.nom) }}{# form_row() = on appelle chaque input #}
+                </div>
+
+                <div class="col-md-6">
+                    {{ form_row(formProduit.prix , { 'attr' : {"class" : "bg-info"}  }  )         }}
+                    {#                             ['attr' => ["class" => 'bg-info'] ]  #}
+                    {# Syntaxe :
+
+                        tableau en twig ===>     { } 
+                        assocation      ===>      :
+
+                     #}
+                </div>
+                
+            </div>
+
+            <div class="col-md-12">
+                {{ form_row(formProduit.category) }}
+            </div>
+
+            <div class="col-md-12">
+                {{ form_row(formProduit.matieres) }}
+            </div>
+            
+            {{ form_row(formProduit.imageFile, { 'attr' : {"onChange" : "loadFile(event)"}  }  )         }}
+            
+            <div class="col-md-12 text-center">
+            
+                <img id="image"
+
+                    {% if produit.image is not empty %}
+                        src="{{ asset('images/imagesUpload/' ~ produit.image) }}"
+                        {# src="{{asset("images/imagesUpload/#{produit.image}") }}" #}
+                    {% endif %}
+                 style='width:300px'>
+
+                    {# Retirer l'image par la route  image_produit_supprimer #}
+                    {% if produit.image is not empty %}
+                        <a href="{{ path('image_produit_supprimer' , {'id' : produit.id }   ) }}">
+                            <img src="{{ asset('images/delete.png') }}" alt="icône de suppression" style="position:relative;top:-100px">
+                        </a>
+                    {% endif %}
+
+
+            </div>
+
+            {# Retirer l'image par la checkbox  #}
+            {% if produit.image is not empty %}
+                <input id="imageSupp" name="imageSupp" type="checkbox" >
+                <label for="imageSupp">Retirer l'image</label>
+            {% endif %}
+
+            <div class="row justify-content-center">
+                <input type="submit" value="Modifier" class="btn btn-success mt-3 col-md-6">
+            </div>
+                {# <button type="submit" class="btn btn-success mt-3 col-md-12">Ajouter</button> #}
+                {# 
+                    Pour le bouton "submit"
+                    soit on le mentionne dans ProduitType et donc on l'appelle en twig avec la fonction form_row()
+                    soit on peut écrire entre form_start() et form_end() la balise input (ou button)
+
+                #}
+        {{ form_end(formProduit) }} {# form_end() = balise fermante form #}
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+
+        var loadFile = function(event){
+            var image = document.getElementById('image');
+
+            image.src = URL.createObjectURL(event.target.files[0]);
+        };
+
+    </script>
+
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/select2.js') }}"></script>
+    <script>
+        $(function(){
+            $('.select2').select2()
+            
+        })
+    </script>
+
+
+
+{% endblock %}
+

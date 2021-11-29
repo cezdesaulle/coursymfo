@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %} {# étendre le fichier base.html.twig #}
+
+{% block title %} {{parent()}} | Inscription{% endblock %}
+
+{% block titreH1 %}Inscription{% endblock %}
+
+
+{% block body %}
+
+
+    <div class="col-md-4 mx-auto text-center">
+
+        {{ form_start(formUser) }}
+
+
+            {{ form_row(formUser.email) }}
+<br>
+            {{ form_row(formUser.password) }}
+<br>
+            {{ form_row(formUser.confirm_password) }}
+<br>
+            {{ form_row(formUser.nom) }}
+<br>
+            {{ form_row(formUser.prenom) }}
+<br>
+
+            <input type="submit" value="Inscrire" class="btn btn-success mt-3 col-md-12">
+
+
+
+
+        {{ form_end(formUser) }}
+    
+
+    </div>
+ 
+
+
+{% endblock %}
+

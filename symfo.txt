@@ -1,0 +1,326 @@
+connexion:
+
+ID de réunion : 810 555 1977
+Code secret : 609137
+050191
+
+
+
+
+
+Framework symfony
+
+Necessite Composer: 
+Gestionnaire de dépendance. Pour ajouter des librairies dont votre projet dépend (a besoins)
+
+
+
+composer --version
+php --version
+
+Install pour visual:
+PHP intellisense
+PHP Namespace Resolver
+Twig language 2
+dot.ENV
+
+ctr+alt+i =>import les classes
+
+php -i => phpinfo();
+php -n =>
+install composer: getcomposer.org.
+
+## mac 
+php composer-setup.php --install-dir=bin --filename=composer
+php bin/composer
+
+### pour le deplacer et le rendre global
+mv composer.phar/usr/local/bin/composer
+
+Ensuite site symfony
+
+composer create-project symfony/website-skeleton bijouterie
+
+
+#### explication architecture symfony ####
+src->controller, entity, repository
+#annotation : permet de controller les routes passer dans l'url
+#ORM : Doctrine (object relationnal mapping)
+programme qui va permettre de gérer toute la partie de gestion de BDD. (CRUD)
+
+public->uploads, css, js
+
+templates->
+base.html.twig => gabari de base, doctype, assets  {{ asset('css/style.css) }}
+header > nav etc..
+tout les templates vont généralement hérité de base.html.twig via {% extends 'base.html.twig' %}
+{%  %}
+commande twig => if, for...
+
+explication twig
+twig est un langage de rendu, un moteur de template, qui permet de traiter et d'afficher les données transmises par le controller sur les différents templates
+# est intégré automatiquement dans symfony.
+# plus de php dans les templates, twig se charge d'interpreter les variables.
+# variable transmise par le controller .... via la méthode ...
+{{ }} interpolation qui appelle la variable dans le twig.
+
+
+
+
+#lancer cette commande pour certificat de securité https
+symfony.exe server:ca:install
+#lancement serveur
+php -S 127.0.0.1:8001 -t public
+symfony serve
+
+#creation controller
+php bin/console make:controller
+
+declarer pubf home() route("/",name="home")
+on fait passer des variables nom, prenom, âge
+
+premier affichage dans index.html.twig
+
+voir https://twig.symfony.com/doc/3.x/
+
+{{ "now"| date('d/m/Y H:i:s') }} => formate la date
+{{ variable| striptags) }}
+
+
+import de bootstrap 4 dans base.html.twig
+mise en place d'un container et d'une nav 
+
+
+##   GIT ####
+
+$ git init
+
+$ git config --global user.name 'cezdesaulle'
+
+$ git config --global user.email 'cezdesaulle@gmail.com'
+
+aller sur github create new repository '...'
+
+$ git remote add origin https://github.com/utilisateur/votre_projet.git
+$ git add --all
+$ git commit -m "Première version de mon projet"
+$ git push -u origin master ¤ va demander le login et mdp
+
+
+
+
+
+
+
+
+#########################  Fin de matinée1 ################################
+#connection dbserver
+cd c:\xampp\mysql\bin
+mysql.exe -u root --password
+
+#.env config db
+DATABASE_URL="mysql://root:@127.0.0.1:3306/bijoux?serverVersion=10.4.18-MariaDB"
+# php bin/console doctrine:database:create
+
+reflection sur schema BDD avec liens et types, nullable ou non
+
+# php bin/console make:entity Article
+nom=>prix=>createAt=>image
+
+# php bin/console make:migration
+# php bin/console doctrine:migrations:migrate
+
+-ceation de fixtures.
+#composer require --dev orm-fixtures
+expliquer qu'il existes d'autres librairies tels que faker pour générer des fixtures qui possèdent plus de propriété
+
+
+
+-Recuperation des fixtures dans un tableau BO avec voir 
+
+-creation fiche individuel
+
+    /**
+     * @Route("/show/{id}", name="show_article")
+     */
+    public function show(Article $article)
+    {
+        return $this->render('home/article_show.html.twig',[
+            'article'=>$article
+        ]);
+    }
+
+-Formulaire d'ajout via form symfony (voir bootstrap 4 form theme DE SYMFONY)
+
+ =>form_themes: ['bootstrap_4_layout.html.twig'] à coller dans config/package/twig.yaml
+php bin/console make:form ArticleForm
+on supprime ->add(createAt) car va etre setté à la main
+
+controller, explication de Request avec un dump expliquant qu'il récupère toutes les superglobales
+on va sur la route voir le dump
+explication du manager entitymanagerInterface qui traitre les données de request pour les transmettre à doctrine
+repeter que le repository represente les SELECT en BDD
+et que l'entité est l'objet représentant la table en bdd d'ou l'instanciation de l'objet article afin de pouvoir le remplir
+passer à la fonction $form=$this->createForm($article)
+
+en controller
+ $newArticle = new Article;
+ $form=$this->createForm(ArticleFormType::class, $articleCreate);
+ $form->handleRequest($request);
+
+on transmet le formulaire à twig via la méthode $form->createview()
+on passe au twig avec le montage du formulaire, on regarde le résultat sur la route et annalyse des dumps
+-Formulaire d'ajout avec string pour photo dans un premier temps.
+
+on repasse en controller pour $form->handlerequest($request)
+
+on lance la condition de submit et valid et on set le createAt
+on appel le manager pour le persist($article) puis pour le flush()
+Mettre en place les contraintes @Assert sur l'entité
+
+  * @Assert\NotBlank(message="Veuillez renseigner le prix")
+     * @Assert\Positive(message="Veuillez renseigner un prix supérieur à zéro")
+     * @Assert\Type(
+     *     type="integer",
+     *     message="Entrez un nombre"
+     * )
+     
+
+  * @Assert\NotBlank(message="Veuillez renseigner le nom")
+     * @Assert\Length(
+     * min = 3,
+     * max = 16,
+     * minMessage = "3 caractères minimum",
+     * maxMessage = "16 caractères maximum"
+     * )
+     
+
+
+ajouter parametre dans service.yaml
+
+images_directory: '%kernel.project_dir%/public/images/imagesUpload'
+
+ gestion upload et le changement en type File du champs image
+et gestion de l'affichage de l'aperçu en js et jquery
+
+########################### fin journée 1 ######################################
+		     
+
+gestion de la modification de l'article
+-ajout d'une route "/blog/{id}/edit" name="blog_edit"
+passage de l'entité article en argument avec $article=null par default pour ne pas générer d'erreur
+
+
+
+création nouvelle entité avec relation (clé étrangère à clé primaire) entity Comment
+propriété=> nom=articles =>type=relation =>lié à entité article => relation type= OneToMany
+
+table user
+# php bin/console make:entity User
+propriete->email string 255 non null
+	->username string 255 non null
+	->password string 255 non null
+
+# php bin/console make:form RegistrationForm
+
+entity User
+ajout du champ dans le formulaire  ->add('confirm_password') 
+ajout dans l'entité de la propriété Public confirm_password
+
+# php bin/console make:controller SecurityController
+on supprime index
+
+on créé registration() sur route "/inscription" name="inscription"
+creation inscription.html.twig
+envoi du formulaire 
+mettre en place les contrainte sur l'entité
+@Assert\equalTo(propertyPath="confirm_password",
+		message="les mots de passe ne correspondent pas")
+
+ensuite config->package->security.yaml pour encryptage du mot de passe
+ensuite appelle de UserPasswordEncoderInterface $encoder dans securityController sur la methode registration
+et on implement UserInterface dans l'entité User // User herite de UserInterface
+et on ajoute les méthodes qui heritent de UserInterface et nécessaires au bon fonctionnement
+    public function getRoles()
+    {
+        return $role=['ROLE_USER']
+    }
+
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    } 
+
+ensuite sur le securityController dans le if(is_submitted....)
+
+	$hash= $encoder->encodePassword($user, $user->getPassword());
+            dump($hash);
+            $user->setPassword($hash);
+            dump($user);
+
+            $manager->persist($user);
+            $manager->flush();
+
+ensuite ajout de la contraint sur l'entité user au dessus de la classe user
+
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="Un compte existe déjà avec cet email"
+ * )
+
+contrainte sur email
+
+@Assert\Email(
+message="veuillez rentrer une adresse mail valide")
+@Assert\NotBlank etc....
+
+creation login() avec render connexion.html.twig
+=> formulaire à la mano
+
+redirection de l'inscription vers connexion avec un addflah success
+
+
+
+enuite config->security.yaml
+providers
+firewall
+provider
+form_login
+
+ensuite 
+logout() avec sa route seule
+security.yaml=> logout
+
+
+ensuite crea du controller admin pour le BO
+
+# la on ajoute le champs Role dans User
+make:entity: User =>roles=> type json
+
+# dans security.yaml à la fin
+
+- { path: ^/admin, roles: ROLE_ADMIN }
+
+# à ajouter dans entité role
+
+    public function getRoles()
+    {
+        $roles = $this->roles;
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+
+
+
+

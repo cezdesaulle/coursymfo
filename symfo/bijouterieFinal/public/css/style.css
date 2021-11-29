@@ -1,0 +1,13 @@
+.form-error-icon{
+    display: none;
+}
+
+.form-error-message{
+    color:orangered;
+    font-style: italic;
+    font-size: 1.2em;
+}
+
+.d-block{
+    text-align: center;
+}

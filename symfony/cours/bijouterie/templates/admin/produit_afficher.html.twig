@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %} {# étendre le fichier base.html.twig #}
+
+{% block title %} {{parent()}} | Gestion des produits{% endblock %}
+
+
+{% block titreH1 %}Gestion des produits{% endblock %}
+
+
+{% block body %}
+
+
+    <div class="col-md-10 mx-auto">
+
+
+    {% for message in app.flashes('ajoutProduit') %}
+        <div class="alert alert-success col-md-6 mx-auto text-center">
+            {{message}}
+        </div>
+    {% endfor  %}
+
+    
+
+        <div class="row justify-content-end">
+            <a class="btn btn-success col-md-2 mb-3" href="{{ path('produit_ajouter') }}">Ajouter un produit</a>
+        </div>
+
+        {% if produits is not empty %} {# si le tableau produits n'est pas vide #}
+
+            
+                <table class="table table-white table-striped table-hover text-center">
+
+                    <thead class="bg-dark text-white">
+
+                        <tr>
+                            <th>ID produit</th>
+                            <th>Nom</th>
+                            <th>Prix (€)</th>
+                            <th>Image</th>
+                            <th>Date</th>
+                            <th>Catégorie</th>
+                            <th>Matières</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                    
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for produit in produits %}
+
+                            <tr>
+                            
+                                <td>{{ produit.id }}</td>
+                                <td>{{ produit.nom }}</td>
+                                <td>{{ produit.prix }}</td>
+                                <td>
+
+                                    {% if produit.image is not empty  %} {# s'il y a une image en bdd #}
+                                        <img src="{{ asset('images/imagesUpload/' ~ produit.image) }}" alt="{{ produit.nom }}" style='width:50px'>
+                                    {% else  %}{# si non, value = NULL, on affiche celle par défaut #}
+                                        <img src="{{ asset('images/imageDefault.jpg') }}" alt="image par défault" style='width:50px'>
+                                    {% endif  %}
+                                
+                                </td>
+
+                                <td>{{ produit.dateAt | date('d/m/Y')}}</td>
+
+                                <td>{{ produit.category.nom }}</td>
+                                {# {{ dump(produit.category) }} #}
+                            
+                                {#
+                                    produit est un tableau (une ligne de la table Produit cad : id nom prix image date category)
+                                    il faut "pointer" sur la priorité (champ voulu) ex : produit.id produit.nom
+                                    sauf que produit.category n'est pas une string c'est un tableau qui va récupérer la ligne dans la table Category
+                                    si on veut afficher le nom de la catégorie d'un produit 
+                                    produit.category.nom
+                                #}
+
+                                <td>
+                                    {# produit.matieres peut contenir des matieres donc sous format tableau multidimentionnel, on extrait chaque tableau avec matiere  #}
+                                    {% for matiere in produit.matieres %}
+                                
+                                        {# Si le tableau matiere est la dernier du tableau produit.matieres (multidimentionnel) #}
+                                        {# |last permet de récupérer la dernière valeur d'un tableau ou le dernier caractère d'un string /// à l'inverse : |first #}
+                                        {% if matiere == produit.matieres|last %}
+                                            {{ matiere.nom }} 
+                                        {% else %}
+                                            {{ matiere.nom }} /
+                                        {% endif %}
+                                
+                                    {% endfor %}
+                                </td>
+
+
+                                <td>
+                                    <a href="{{ path('produit_modifier' , {'id' : produit.id } ) }}" >
+                                        <img src="{{ asset('images/update.png') }}" alt="icône de modification">
+                                    </a>
+                                </td>
+
+
+
+                                <td>
+                                    <a href="{{ path('produit_supprimer' , {'id' : produit.id } ) }}" onclick="return confirm('confirmez-vous la suppression ?')">
+                                        <img src="{{ asset('images/delete.png') }}" alt="icône de suppression">
+                                    </a>
+                                </td>
+                            
+                            </tr>
+
+                        {% endfor %}
+                    
+                    </tbody>
+                
+                
+                
+                </table>
+            
+
+        {% else %} {# sinon le tableau produits est vide #}
+
+            <h4 class="text-center mt-4 text-danger">Il n'y aucun produit pour le moment</h4>
+            
+        {% endif %}
+
+    </div>
+
+{% endblock %}
+

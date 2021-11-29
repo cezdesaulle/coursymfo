@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %} {# étendre le fichier base.html.twig #}
+
+{% block title %} {{parent()}} | BACK OFFICE{% endblock %}
+
+
+{% block titreH1 %}BACK OFFICE{% endblock %}
+
+
+{% block body %}
+
+    <div class="col-md-10 mx-auto">
+
+        <div class="row justify-content-between">
+        
+            <a class="btn btn-danger p-4 col-md-3" href="{{ path('produit_afficher') }}">Gestion des produits</a>
+
+
+            <a class="btn btn-warning p-4 col-md-3" href="{{ path('category_afficher') }}">Gestion des catégories</a>
+        
+        
+        </div>
+    
+
+
+    </div>
+
+
+{% endblock %}

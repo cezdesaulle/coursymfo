@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %} {# étendre le fichier base.html.twig #}
+
+{% block title %} {{parent()}} | Profil{% endblock %}
+
+
+{% block titreH1 %}Profil{% endblock %}
+
+
+{% block body %}
+
+
+<div class="col-md-6 mx-auto">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Email : <strong>{{ app.user.email }}</strong></li>
+        <li class="list-group-item">Nom : <strong>{{ app.user.nom }}</strong></li>
+        <li class="list-group-item">Prénom : <strong>{{ app.user.prenom }}</strong></li>
+    </ul>
+
+    <div class="row justify-content-between">
+    
+        <a class="col-md-5 btn btn-info" href="">Modifier le profil</a>
+        <a class="col-md-5 btn btn-danger" href="">Modifier le mot de passe</a>
+    </div>
+
+
+</div>
+
+
+{% endblock %}
+
+

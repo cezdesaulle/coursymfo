@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %} {# étendre le fichier base.html.twig #}
+
+{% block title %} {{parent()}} | Accueil{% endblock %}
+
+
+{% block titreH1 %}Accueil{% endblock %}
+
+
+{% block body %}
+
+
+    <h2>Bonjour 
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        {{ app.user.prenom }}
+    {% endif %}
+    
+    
+    </h2>
+
+
+
+{% endblock %}
+
+

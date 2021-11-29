@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %} {# étendre le fichier base.html.twig #}
+
+        {% block stylesheets %}
+        <style>
+            h1{
+                color:red;
+            }
+        </style>
+        {% endblock %}
+
+{% block title %} {{parent()}} | page{% endblock %}
+
+{% block titreH1 %}Bonjour Louis{% endblock %}
+
+
+{% block body %}
+
+     
+
+
+
+{% if age >= 18 %}
+    <h2>MAJEUR</h2>
+{% else %}
+    <h2>MINEUR</h2>
+{% endif %}
+
+
+{% endblock %}
+
+
+
+
+{#
+
+    Twig permet de simplifier l'écriture 
+
+    par exemple plus de balises PHP
+
+    {{}} : interpolation, afficher le contenu d'une variable
+
+    {% %} commande
+
+
+
+
+
+#}
+

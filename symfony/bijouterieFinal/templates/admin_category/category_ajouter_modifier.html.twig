@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{parent()}} | 
+
+    {% if modification %}
+        Modifier la catégorie "{{ category.nom }}"
+    {% else %}
+        Ajouter une catégorie
+    {% endif %}
+
+
+{% endblock %}
+
+
+{% block titreH1 %}
+
+    {% if modification %}
+        Modifier la catégorie "{{ category.nom }}"
+    {% else %}
+        Ajouter une catégorie
+    {% endif %}
+
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="col-md-6 mx-auto">
+        {{ form_start(formCategory) }}
+
+            
+
+            <div class="col-md-6 mx-auto">
+                {{ form_row(formCategory.nom) }}
+            </div>
+
+            <div class="row justify-content-center">
+                <input type="submit" 
+                
+                    {% if modification %}
+                        value="Modifier" 
+                    {% else %}
+                        value="Ajouter" 
+                    {% endif %}
+                
+                
+                
+                class="btn btn-success mt-3 col-md-6">
+            </div>
+
+        {{ form_end(formCategory) }} 
+    </div>
+
+
+{% endblock %}
